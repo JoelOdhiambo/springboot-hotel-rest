@@ -2,6 +2,7 @@ package com.example.roomwebapp.web;
 
 import com.example.roomwebapp.entity.room.dto.AddRoomDto;
 import com.example.roomwebapp.entity.room.dto.RoomDto;
+import com.example.roomwebapp.entity.room.dto.UpdateRoomDto;
 import com.example.roomwebapp.entity.room.model.Room;
 import com.example.roomwebapp.entity.room.repository.RoomRepository;
 import com.example.roomwebapp.entity.room.service.RoomService;
@@ -11,8 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -54,19 +57,33 @@ public class RoomRestController {
         return ResponseEntity.ok().body(roomDto);
     }
 
-    @PatchMapping("/{id}/room-name/{name}")
-    public ResponseEntity<Room>updateRoomName(@PathVariable long id, @PathVariable String name){
-        Room room=roomRepository.findById(id).get();
-        room.setName(name);
-        return new ResponseEntity<>(roomRepository.save(room),HttpStatus.OK);
+    @PatchMapping("/partial-update/{id}")
+    public  ResponseEntity<Void> partialRoomUpdate(@PathVariable("id") long id, @Valid @RequestBody UpdateRoomDto updateRoomDto){
+        Optional<Room> roomOptional = Optional.of(roomRepository.getById(id));
+        if (!roomOptional.isPresent()){
+            return ResponseEntity.notFound().build();
+        }
+
+        Room room = roomOptional.get();
+
+        if (updateRoomDto.getName().isPresent()){
+            room.setName(updateRoomDto.getName().get());
+        }
+
+        if (updateRoomDto.getNumber().isPresent()){
+            room.setNumber(updateRoomDto.getNumber().get());
+        }
+
+        if (updateRoomDto.getInfo().isPresent()){
+            room.setInfo(updateRoomDto.getInfo().get());
+        }
+
+        roomRepository.save(room);
+
+        return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/bed-info/{info}")
-    public ResponseEntity<Room>updateBedInfo(@PathVariable long id, @PathVariable String info){
-        Room room=roomRepository.findById(id).get();
-        room.setInfo(info);
-        return new ResponseEntity<>(roomRepository.save(room),HttpStatus.OK);
-    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteRoom(@PathVariable long id){
         roomService.deleteRoom(id);

@@ -2,6 +2,7 @@ package com.example.roomwebapp.entity.room.service;
 
 import com.example.roomwebapp.entity.room.dto.AddRoomDto;
 import com.example.roomwebapp.entity.room.dto.RoomDto;
+import com.example.roomwebapp.entity.room.dto.UpdateRoomDto;
 import com.example.roomwebapp.entity.room.repository.RoomRepository;
 import com.example.roomwebapp.entity.room.model.Room;
 import org.springframework.stereotype.Service;
@@ -46,14 +47,10 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room updateRoomName(long id, String name) {
+    public RoomDto partialRoomUpdate(long id, UpdateRoomDto updateRoomDto) {
         return null;
     }
 
-    @Override
-    public Room updateBedInfo(long id, String info) {
-        return null;
-    }
 
     @Override
     public void deleteRoom(long id) {
