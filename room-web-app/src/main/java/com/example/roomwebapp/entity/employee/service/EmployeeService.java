@@ -10,9 +10,6 @@ public interface EmployeeService {
     List<Employee> getAllEmployees();
     EmployeeDto createEmployee(AddEmployeeDto addEmployeeDto);
     EmployeeDto updateEmployee(String id, AddEmployeeDto addEmployeeDto);
-    Employee updateName(String id,Employee employeeRequest);
-
-    Employee updatePosition(String id,Employee employeeRequest);
     void deleteEmployee(String id);
     EmployeeDto getEmployeeById(String id);
 

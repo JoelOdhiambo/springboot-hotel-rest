@@ -2,17 +2,17 @@ package com.example.roomwebapp.web;
 
 import com.example.roomwebapp.entity.room.dto.AddRoomDto;
 import com.example.roomwebapp.entity.room.dto.RoomDto;
-import com.example.roomwebapp.entity.room.dto.UpdateRoomDto;
+import com.example.roomwebapp.entity.room.dto.PartialUpdateRoomDto;
 import com.example.roomwebapp.entity.room.model.Room;
 import com.example.roomwebapp.entity.room.repository.RoomRepository;
 import com.example.roomwebapp.entity.room.service.RoomService;
 import com.example.roomwebapp.entity.room.service.RoomServiceImpl;
+import com.example.roomwebapp.helper.JsonNullableUtils;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -58,29 +58,20 @@ public class RoomRestController {
     }
 
     @PatchMapping("/partial-update/{id}")
-    public  ResponseEntity<Void> partialRoomUpdate(@PathVariable("id") long id, @Valid @RequestBody UpdateRoomDto updateRoomDto){
+    public  ResponseEntity<RoomDto> partialRoomUpdate(@PathVariable("id") long id,@RequestBody PartialUpdateRoomDto updateRoomDto){
+
+
         Optional<Room> roomOptional = Optional.of(roomRepository.getById(id));
-        if (!roomOptional.isPresent()){
-            return ResponseEntity.notFound().build();
-        }
 
         Room room = roomOptional.get();
 
-        if (updateRoomDto.getName().isPresent()){
-            room.setName(updateRoomDto.getName().get());
-        }
-
-        if (updateRoomDto.getNumber().isPresent()){
-            room.setNumber(updateRoomDto.getNumber().get());
-        }
-
-        if (updateRoomDto.getInfo().isPresent()){
-            room.setInfo(updateRoomDto.getInfo().get());
-        }
+        JsonNullableUtils.changeIfPresent(updateRoomDto.getNumber(),room::setNumber);
+        JsonNullableUtils.changeIfPresent(updateRoomDto.getName(),room::setName);
+        JsonNullableUtils.changeIfPresent(updateRoomDto.getInfo(),room::setInfo);
 
         roomRepository.save(room);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
 

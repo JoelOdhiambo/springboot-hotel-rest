@@ -52,4 +52,42 @@ public class EmployeeRestControllerTest extends RoomWebAppApplicationTests {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    public void partialUpdateEmployeeWorks(){
+        String id="3cb69467-dcaa-4d53-84d9-c0d7ba439645";
+        employeeDto.setFirstName("Moose");
+        employeeDto.setLastName("Toose");
+
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(employeeDto).log().all()
+                .pathParam("id",id)
+                .patch("/api/employees/partial-update/{id}")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    public void deleteEmployeeWorks(){
+        String id="3cb69467-dcaa-4d53-84d9-c0d7ba439645";
+
+        RestAssured.given()
+                .pathParam("id",id)
+                .delete("/api/employees/delete/{id}")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    public void deleteEmployeeFailsInvalidIdType(){
+        long id = 2;
+
+        RestAssured.given()
+                .pathParam("id",id)
+                .delete("/api/employees/delete/{id}")
+                .then().log().all()
+                .statusCode(500);
+    }
 }

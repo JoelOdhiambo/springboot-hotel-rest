@@ -43,27 +43,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.save(employee).toEmployeeDto();
     }
 
-
-
-    @Override
-    public Employee updateName(String id, Employee employeeRequest) {
-        Employee employee=employeeRepository.findById(id)
-                .orElseThrow(()->new NotFoundException("Employee" + id));
-        employee.setFirstName(employeeRequest.getFirstName());
-
-
-        return employeeRepository.save(employee);
-    }
-
-    @Override
-    public Employee updatePosition(String id, Employee employeeRequest) {
-        Employee employee=employeeRepository.findById(id)
-                .orElseThrow(()->new NotFoundException("Employee" + id));
-        employee.setPosition(employeeRequest.getPosition());
-
-        return employeeRepository.save(employee);
-    }
-
     @Override
     public void deleteEmployee(String id) {
         Employee employee=employeeRepository.findById(id)

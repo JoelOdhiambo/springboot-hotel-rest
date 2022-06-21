@@ -2,9 +2,11 @@ package com.example.roomwebapp.web;
 
 import com.example.roomwebapp.entity.employee.dto.AddEmployeeDto;
 import com.example.roomwebapp.entity.employee.dto.EmployeeDto;
+import com.example.roomwebapp.entity.employee.dto.PartialUpdateEmployeeDto;
 import com.example.roomwebapp.entity.employee.model.Employee;
 import com.example.roomwebapp.entity.employee.repository.EmployeeRepository;
 import com.example.roomwebapp.entity.employee.service.EmployeeServiceImpl;
+import com.example.roomwebapp.helper.JsonNullableUtils;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -55,22 +58,20 @@ public class EmployeeRestController {
         return ResponseEntity.ok().body(employeeDto);
     }
 
-    @PatchMapping("/{id}/name/{firstName},{lastName}")
-    public ResponseEntity<Employee> updateName(@PathVariable String id, @PathVariable String firstName,@PathVariable String lastName ){
-        Employee employee = employeeRepository.findById(id).get();
-        employee.setFirstName(firstName);
-        employee.setLastName(lastName);
-        return new ResponseEntity<>(employeeRepository.save(employee),HttpStatus.OK);
+    @PatchMapping("/partial-update/{id}")
+    public ResponseEntity<EmployeeDto> partialEmployeeUpdate(@PathVariable("id") String id, @RequestBody PartialUpdateEmployeeDto partialUpdateEmployeeDto){
+        Optional<Employee> employeeOptional = Optional.of(employeeRepository.getReferenceById(id));
 
+        Employee employee = employeeOptional.get();
+
+        JsonNullableUtils.changeIfPresent(partialUpdateEmployeeDto.getFirstName(),employee::setFirstName);
+        JsonNullableUtils.changeIfPresent(partialUpdateEmployeeDto.getLastName(), employee::setLastName);
+        JsonNullableUtils.changeIfPresent(partialUpdateEmployeeDto.getPosition(),employee::setPosition);
+
+        employeeRepository.save(employee);
+        return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{id}/position/{position}")
-    public ResponseEntity<Employee> updatePosition(@PathVariable String id, @PathVariable String position ){
-        Employee employee = employeeRepository.findById(id).get();
-        employee.setPosition(position);
-        return new ResponseEntity<>(employeeRepository.save(employee),HttpStatus.OK);
-
-    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse> deleteEmployee(@PathVariable String id){

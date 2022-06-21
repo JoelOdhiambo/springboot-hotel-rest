@@ -68,7 +68,7 @@ public class RoomRestControllerTest extends RoomWebAppApplicationTests {
 
     @Test
     public void updateRoomWorks(){
-        long id = 1;
+        long id = 2;
         roomDto.setNumber("A1");
         roomDto.setName("Winchester");
         roomDto.setInfo("1L");
@@ -84,7 +84,7 @@ public class RoomRestControllerTest extends RoomWebAppApplicationTests {
 
     @Test
     public void updateRoomFailsInvalidNumberLength(){
-        long id = 1;
+        long id = 2;
         roomDto.setNumber("A1A1");
         roomDto.setName("Winchester");
         roomDto.setInfo("1L");
@@ -129,6 +129,22 @@ public class RoomRestControllerTest extends RoomWebAppApplicationTests {
                 .put("/api/rooms/update/{id}")
                 .then().log().all()
                 .statusCode(500);
+    }
+
+    @Test
+    public void partialUpdateRoomWorks(){
+        long id = 1;
+
+        roomDto.setName("Winchester");
+        roomDto.setInfo("1L");
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(roomDto).log().all()
+                .pathParam("id",id)
+                .patch("/api/rooms/partial-update/{id}")
+                .then().log().all()
+                .statusCode(200);
     }
 
     @Test

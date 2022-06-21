@@ -2,7 +2,7 @@ package com.example.roomwebapp.entity.room.service;
 
 import com.example.roomwebapp.entity.room.dto.AddRoomDto;
 import com.example.roomwebapp.entity.room.dto.RoomDto;
-import com.example.roomwebapp.entity.room.dto.UpdateRoomDto;
+import com.example.roomwebapp.entity.room.dto.PartialUpdateRoomDto;
 import com.example.roomwebapp.entity.room.repository.RoomRepository;
 import com.example.roomwebapp.entity.room.model.Room;
 import org.springframework.stereotype.Service;
@@ -46,10 +46,7 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.save(room).toRoomDto();
     }
 
-    @Override
-    public RoomDto partialRoomUpdate(long id, UpdateRoomDto updateRoomDto) {
-        return null;
-    }
+
 
 
     @Override

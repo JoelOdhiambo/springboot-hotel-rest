@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @SuppressWarnings("FieldMayBeFinal")
-public class UpdateRoomDto {
+public class PartialUpdateRoomDto {
     @NotNull
     @Size(max = 2)
     private JsonNullable<String> number=JsonNullable.undefined();
@@ -22,6 +22,6 @@ public class UpdateRoomDto {
     @Size(max = 2)
     private JsonNullable<String>  info=JsonNullable.undefined();
 
-    protected UpdateRoomDto(){}
+    protected PartialUpdateRoomDto(){}
 
 }
