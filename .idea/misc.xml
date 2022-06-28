@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/room-web-app" />
+  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
@@ -11,6 +14,7 @@
         <option value="$PROJECT_DIR$/room-web-app/pom.xml" />
         <option value="$PROJECT_DIR$/bootingweb/pom.xml" />
         <option value="$PROJECT_DIR$/room-clr/pom.xml" />
+        <option value="$PROJECT_DIR$/room-cleaner-notifier/pom.xml" />
       </list>
     </option>
   </component>

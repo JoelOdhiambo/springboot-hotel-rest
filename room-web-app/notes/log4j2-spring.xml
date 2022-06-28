@@ -1,0 +1,25 @@
+<Configuration status="warn" name="MyApp" packages="">
+    <Appenders>
+        <Console name="CONSOLE">
+            <PatternLayout>
+                <Pattern>%date{HH:mm:ss.sss} %-5level [%thread] %logger{0}: %msg%n</Pattern>
+            </PatternLayout>
+        </Console>
+
+        <RollingFile name="RollingFile" fileName="${env:JBOSS_HOME}/standalone/log/application.log"
+                     filePattern="${env:JBOSS_HOME}/standalone/log/${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,13 +1,12 @@
 package com.example.roomwebapp.web;
 
-import com.example.roomwebapp.entity.employee.dto.AddEmployeeDto;
-import com.example.roomwebapp.entity.employee.dto.EmployeeDto;
-import com.example.roomwebapp.entity.employee.dto.PartialUpdateEmployeeDto;
-import com.example.roomwebapp.entity.employee.model.Employee;
-import com.example.roomwebapp.entity.employee.repository.EmployeeRepository;
-import com.example.roomwebapp.entity.employee.service.EmployeeServiceImpl;
+import com.example.roomwebapp.dto.AddEmployeeDto;
+import com.example.roomwebapp.dto.EmployeeDto;
+import com.example.roomwebapp.dto.PartialUpdateEmployeeDto;
+import com.example.roomwebapp.entity.Employee;
+import com.example.roomwebapp.repository.EmployeeRepository;
+import com.example.roomwebapp.service.EmployeeServiceImpl;
 import com.example.roomwebapp.helper.JsonNullableUtils;
-import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +40,7 @@ public class EmployeeRestController {
         EmployeeDto employeeDto=employeeService.getEmployeeById(id);
 
 
-        return ResponseEntity.ok().body(employeeDto);
+        return new ResponseEntity<>(employeeDto,HttpStatus.OK);
     }
 
     @PostMapping("/create")
@@ -55,28 +54,19 @@ public class EmployeeRestController {
     public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable String id, @RequestBody AddEmployeeDto addEmployeeDto){
         EmployeeDto employeeDto=employeeService.updateEmployee(id, addEmployeeDto);
 
-        return ResponseEntity.ok().body(employeeDto);
+        return new ResponseEntity<>(employeeDto,HttpStatus.OK);
     }
 
     @PatchMapping("/partial-update/{id}")
     public ResponseEntity<EmployeeDto> partialEmployeeUpdate(@PathVariable("id") String id, @RequestBody PartialUpdateEmployeeDto partialUpdateEmployeeDto){
-        Optional<Employee> employeeOptional = Optional.of(employeeRepository.getReferenceById(id));
-
-        Employee employee = employeeOptional.get();
-
-        JsonNullableUtils.changeIfPresent(partialUpdateEmployeeDto.getFirstName(),employee::setFirstName);
-        JsonNullableUtils.changeIfPresent(partialUpdateEmployeeDto.getLastName(), employee::setLastName);
-        JsonNullableUtils.changeIfPresent(partialUpdateEmployeeDto.getPosition(),employee::setPosition);
-
-        employeeRepository.save(employee);
-        return ResponseEntity.ok().build();
+        EmployeeDto employeeDto=employeeService.partialEmployeeUpdate(id, partialUpdateEmployeeDto);
+        return new ResponseEntity<>(employeeDto,HttpStatus.OK);
     }
 
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ApiResponse> deleteEmployee(@PathVariable String id){
+    public ResponseEntity<String> deleteEmployee(@PathVariable String id){
         employeeService.deleteEmployee(id);
-        ApiResponse apiResponse=new ApiResponse();
-        return new ResponseEntity<>(apiResponse,HttpStatus.OK);
+        return new ResponseEntity<>("Employee "+ id +" deleted successfully!",HttpStatus.OK);
     }
 }

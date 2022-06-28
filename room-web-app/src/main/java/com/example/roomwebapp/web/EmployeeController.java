@@ -1,6 +1,6 @@
 package com.example.roomwebapp.web;
 
-import com.example.roomwebapp.entity.employee.service.EmployeeServiceImpl;
+import com.example.roomwebapp.service.EmployeeServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

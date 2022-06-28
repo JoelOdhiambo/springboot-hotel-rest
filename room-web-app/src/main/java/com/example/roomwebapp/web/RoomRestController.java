@@ -1,12 +1,12 @@
 package com.example.roomwebapp.web;
 
-import com.example.roomwebapp.entity.room.dto.AddRoomDto;
-import com.example.roomwebapp.entity.room.dto.RoomDto;
-import com.example.roomwebapp.entity.room.dto.PartialUpdateRoomDto;
-import com.example.roomwebapp.entity.room.model.Room;
-import com.example.roomwebapp.entity.room.repository.RoomRepository;
-import com.example.roomwebapp.entity.room.service.RoomService;
-import com.example.roomwebapp.entity.room.service.RoomServiceImpl;
+import com.example.roomwebapp.dto.AddRoomDto;
+import com.example.roomwebapp.dto.RoomDto;
+import com.example.roomwebapp.dto.PartialUpdateRoomDto;
+import com.example.roomwebapp.entity.Room;
+import com.example.roomwebapp.repository.RoomRepository;
+import com.example.roomwebapp.service.RoomService;
+import com.example.roomwebapp.service.RoomServiceImpl;
 import com.example.roomwebapp.helper.JsonNullableUtils;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ public class RoomRestController {
     @GetMapping("/{id}")
     public ResponseEntity<RoomDto> getRoomId(@PathVariable(name="id")Long id){
         RoomDto roomDto=roomService.getRoomById(id);
-        return ResponseEntity.ok().body(roomDto);
+        return new ResponseEntity<>(roomDto,HttpStatus.OK);
     }
 
     @PostMapping("/create")
@@ -54,32 +54,22 @@ public class RoomRestController {
     public ResponseEntity<RoomDto> updateRoom(@PathVariable("id") long id, @RequestBody AddRoomDto addRoomDto){
         RoomDto roomDto=roomService.updateRoom(id, addRoomDto);
 
-        return ResponseEntity.ok().body(roomDto);
+        return new ResponseEntity<>(roomDto,HttpStatus.OK);
     }
 
     @PatchMapping("/partial-update/{id}")
     public  ResponseEntity<RoomDto> partialRoomUpdate(@PathVariable("id") long id,@RequestBody PartialUpdateRoomDto updateRoomDto){
 
+        RoomDto roomDto = roomService.partialRoomUpdate(id, updateRoomDto);
 
-        Optional<Room> roomOptional = Optional.of(roomRepository.getById(id));
-
-        Room room = roomOptional.get();
-
-        JsonNullableUtils.changeIfPresent(updateRoomDto.getNumber(),room::setNumber);
-        JsonNullableUtils.changeIfPresent(updateRoomDto.getName(),room::setName);
-        JsonNullableUtils.changeIfPresent(updateRoomDto.getInfo(),room::setInfo);
-
-        roomRepository.save(room);
-
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(roomDto,HttpStatus.OK);
     }
 
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ApiResponse> deleteRoom(@PathVariable long id){
+    public ResponseEntity<String> deleteRoom(@PathVariable long id){
         roomService.deleteRoom(id);
-        ApiResponse apiResponse =new ApiResponse();
-        return new ResponseEntity<>(apiResponse,HttpStatus.OK);
+        return new ResponseEntity<>("Room "+ id + " deleted successfully!",HttpStatus.OK);
     }
 
 }

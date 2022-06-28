@@ -2,7 +2,7 @@ package com.example.roomwebapp.web;
 
 
 import com.example.roomwebapp.RoomWebAppApplicationTests;
-import com.example.roomwebapp.entity.room.dto.RoomDto;
+import com.example.roomwebapp.dto.RoomDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.Before;

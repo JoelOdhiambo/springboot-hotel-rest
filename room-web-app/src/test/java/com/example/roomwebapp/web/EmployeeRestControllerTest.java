@@ -1,7 +1,7 @@
 package com.example.roomwebapp.web;
 
 import com.example.roomwebapp.RoomWebAppApplicationTests;
-import com.example.roomwebapp.entity.employee.dto.EmployeeDto;
+import com.example.roomwebapp.dto.EmployeeDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.Before;
@@ -77,17 +77,19 @@ public class EmployeeRestControllerTest extends RoomWebAppApplicationTests {
                 .pathParam("id",id)
                 .delete("/api/employees/delete/{id}")
                 .then().log().all()
+                .assertThat()
                 .statusCode(200);
     }
 
     @Test
-    public void deleteEmployeeFailsInvalidIdType(){
-        long id = 2;
+    public void deleteEmployeeFailsInvalidId(){
+        long id=2;
 
         RestAssured.given()
                 .pathParam("id",id)
                 .delete("/api/employees/delete/{id}")
                 .then().log().all()
+                .assertThat()
                 .statusCode(500);
     }
 }
